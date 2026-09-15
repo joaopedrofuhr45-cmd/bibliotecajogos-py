@@ -45,8 +45,8 @@
                 <tbody>
                     {% for jogo in jogos %}
                     <tr>
-                        <td class="fw-semibold">{ { jogo.titulo } }</td>
-                        <td><span class="badge bg-light text-dark border">{ { jogo.plataforma } }</span></td>
+                        <td class="fw-semibold">{{ jogo.titulo }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ jogo.plataforma }}</span></td>
                         <td>
                             {% if jogo.concluido %}
                             <span class="badge bg-success">Zerado</span>
@@ -55,10 +55,10 @@
                             {% endif %}
                         </td>
                         <td class="text-end">
-                            <form action="/jogos/{ { jogo.id } }/concluir" method="post" class="d-inline">
+                            <form action="/jogos/{{ jogo.id }}/concluir" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-success">Alternar</button>
                             </form>
-                            <form action="/jogos/{ { jogo.id } }/apagar" method="post" class="d-inline ms-1">
+                            <form action="/jogos/{{ jogo.id }}/apagar" method="post" class="d-inline ms-1">
                                 <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Deseja realmente apagar este jogo?')">Apagar</button>
                             </form>
                         </td>
