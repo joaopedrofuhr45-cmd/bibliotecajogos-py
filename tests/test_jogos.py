@@ -53,3 +53,40 @@ def test_api_rest_completa(client):
     # 7. Buscar deletado (404)
     resp_404 = client.get(f"/api/jogos/{jogo_id}")
     assert resp_404.status_code == 404
+
+
+def test_api_nao_encontrado_404(client):
+    id_inexistente = 99999
+    assert client.get(f"/api/jogos/{id_inexistente}").status_code == 404
+    assert client.put(f"/api/jogos/{id_inexistente}", json={"titulo": "X"}).status_code == 404
+    assert client.patch(f"/api/jogos/{id_inexistente}/concluir").status_code == 404
+    assert client.delete(f"/api/jogos/{id_inexistente}").status_code == 404
+
+
+def test_api_validacao_campos(client):
+    # Título vazio não deve ser aceito (min_length=1)
+    resp = client.post("/api/jogos", json={"titulo": "", "plataforma": "PC"})
+    assert resp.status_code == 422
+
+    # Plataforma ausente não deve ser aceita
+    resp = client.post("/api/jogos", json={"titulo": "Zelda"})
+    assert resp.status_code == 422
+
+
+def test_api_atualizacao_parcial(client):
+    post_resp = client.post("/api/jogos", json={"titulo": "Hollow Knight", "plataforma": "PC", "concluido": False})
+    jogo_id = post_resp.json()["id"]
+
+    # Atualiza apenas a plataforma
+    put_resp = client.put(f"/api/jogos/{jogo_id}", json={"plataforma": "Switch"})
+    assert put_resp.status_code == 200
+    assert put_resp.json()["titulo"] == "Hollow Knight"
+    assert put_resp.json()["plataforma"] == "Switch"
+
+
+def test_web_acoes_jogo_inexistente(client):
+    resp_concluir = client.post("/jogos/99999/concluir")
+    assert resp_concluir.status_code == 200
+
+    resp_apagar = client.post("/jogos/99999/apagar")
+    assert resp_apagar.status_code == 200

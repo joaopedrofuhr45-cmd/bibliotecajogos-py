@@ -22,7 +22,7 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 @router.get("/", response_class=HTMLResponse, include_in_schema=False)
 def listar_web(request: Request, db: Session = Depends(get_db)):
     jogos = db.query(Jogo).order_by(Jogo.id.asc()).all()
-    return templates.TemplateResponse(request, "jogos.html", {"jogos": jogos})
+    return templates.TemplateResponse(request=request, name="jogos.html", context={"jogos": jogos})
 
 
 @router.post("/jogos", response_class=RedirectResponse, status_code=status.HTTP_303_SEE_OTHER, tags=["Web"],
